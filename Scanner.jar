@@ -1,0 +1,323 @@
+/*Author:Sarah Hamed & Doaa Essam*/
+
+import java.io.BufferedWriter;
+import java.io.File; 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+public class JavaApplication9 {
+
+    /**
+     * @param args the command line arguments
+     */
+
+    public static void main(String[] args) throws FileNotFoundException, IOException {        
+           File filee = new File("C:\\compiler_input.txt"); 
+          boolean Long_comments=false;
+           PrintStream t = new PrintStream(new FileOutputStream("C:\\Sara&Doaa.txt"));
+           System.setOut(t);
+    Scanner sc = new Scanner(filee); 
+    while (sc.hasNextLine()) 
+    {
+     String inline = sc.nextLine().toString();
+                       int k=0; 
+                       String s="";
+                       String token="";
+                       char C ;
+                       String Token_Type="";
+                       String m_to_string="";
+                        char m='c';
+                        int y=0;
+                        boolean b_xx=false;
+                                        int xx=0;
+
+     for(int i=0;i<inline.length();i=i+k)
+    {           k=0;               int state=0; 
+               for(int j=0;j<3;j++)
+               {
+           switch(state)
+           {     
+               case 0:
+               { 
+               C = inline.charAt(i);
+               s=Character.toString(C);
+             //  System.out.println("s:"+s);
+               Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+               Matcher matcher = p.matcher(s);
+               boolean b = matcher.find();
+               k++;
+            if(xx==1)
+                b_xx=true;
+               if(Long_comments&&b_xx)
+               {
+                                System.out.println("comment: "+Long_comments+"s:"+s);
+  
+               state=5;
+               break;
+               }
+               else if((Character.isSpaceChar(C)))
+          {
+          
+              state=0;
+              break;
+          }
+           else if(Character.isLetter(C))
+             {state=1;
+             break;}
+             else if(Character.isDigit(C))
+             {state=2;
+             break;}
+             else if(b)
+             {
+        if(s.equals("{"))
+        { 
+            Long_comments=true;
+            state=5;
+            break;
+        }
+        else if (s.equals("}"))
+        {
+        state=0;
+        break;
+        }
+     
+        else
+          state=3;
+          break;
+          
+             }
+                 
+                 }
+               
+               case 1:
+               {   
+                  token=token+s;
+                  if((k+i)<inline.length())
+                  {
+                  m=inline.charAt(k+i);
+                  m_to_string=Character.toString(m); 
+                  }
+               Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+               Matcher matcher = p.matcher(m_to_string);
+               boolean b2 = matcher.find();
+               boolean check_char=Character.isLetter(m);
+               if(b2)
+               {
+                   if(m_to_string.equals("_"))
+                    b2=true;
+                    else
+               {
+                   b2=false;
+               }
+               }
+              if(Character.isSpaceChar(m))
+                             k++;
+                   while(!(Character.isSpaceChar(m))&&((k+i)<inline.length())&&(b2||check_char))
+                   {    
+                        m=inline.charAt(k+i);
+                        m_to_string=Character.toString(m);
+                        matcher = p.matcher(m_to_string);
+                        b2 = matcher.find();
+                        check_char=Character.isLetter(m);
+
+               if(b2)
+               {
+                   if(m_to_string.equals("_"))
+                    b2=true;
+                   else
+               {
+                   b2=false;
+               }
+               }
+                       if(!(Character.isSpaceChar(m))&&(b2||check_char))
+                        {   token=token+m_to_string;
+                          k++;
+                        }
+                            if(Character.isSpaceChar(m))
+                             k++;
+                   }
+                 if((s.equals("i")||(s.equals("t"))||(s.equals("e"))||(s.equals("r"))||(s.equals("u"))||(s.equals("w"))))
+                 {
+                     String token_value1="";
+                   switch(token){
+                       case "write":
+                           token_value1="write";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+                          case "if":
+                         token_value1="if";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+                          case "else":
+                          token_value1="else";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+                           case "end":
+                          token_value1="end";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+
+                           case "repeat":
+                         token_value1="repeat";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+
+                           case "until":
+                         token_value1="until";
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                           break;
+                           case "read":
+                        token_value1="read";          
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break;
+
+                             case "then":
+                         token_value1="then";    
+                         Token_Type=token+" , Reserved_word";
+                         state=4;
+                         break; 
+                   }
+               }
+                   if(state==1)
+                         {
+                          Token_Type= token+" , Identifier";
+                          state=4;
+                          break;
+                          
+                         }
+                  break;
+               }
+               case 2: 
+                   token=token+s;
+                   boolean b4=false;
+                  Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+          
+                 if((k+i)<inline.length())
+                  {
+                  m=inline.charAt((k+i));
+                  m_to_string=Character.toString(m); 
+                  Matcher matcher = p.matcher(m_to_string);
+                   b4 = matcher.find();
+                  }
+                   while(!(Character.isSpaceChar(m))&&((k+i)<inline.length())&&!b4)
+                   {    
+                         m=inline.charAt((k+i));
+                         m_to_string=Character.toString(m);
+                           Matcher matcher = p.matcher(m_to_string);
+                           b4 = matcher.find();
+                         token=token+m_to_string;
+                         k++;
+                   }
+                   if(Character.isSpaceChar(m))
+                       k++;
+                   Token_Type=token+" , Number";
+                   state=4;
+                   break;
+
+               case 3:
+                    token=token+s;
+                    boolean check_C=false;
+                    boolean check_N=false;
+                    if((k+i)<inline.length())
+                  {
+                  m=inline.charAt((k+i));
+                  check_C=Character.isLetter(m);
+                  check_N=Character.isDigit(m);
+                  m_to_string=Character.toString(m); 
+                  }
+                   while(!(Character.isSpaceChar(m))&&((k+i)<inline.length())&&(!(check_C||check_N)))
+                   {    
+                         m=inline.charAt((k+i));
+                       m_to_string=Character.toString(m);
+                       token=token+m_to_string;
+                        k++;
+                  m=inline.charAt((k+i));
+
+                   }
+                  if(Character.isSpaceChar(m))
+                       k++;
+                  String token_value=""; 
+                   if(token.equals("+"))
+                       token_value="Plus";
+                  else if(token.equals("-"))
+                       token_value="Minus";
+                  else if(token.equals("*"))
+                       token_value="asterisk";
+                  else if(token.equals("/"))
+                       token_value="Division Slash";
+                  else if(token.equals("<"))
+                      token_value="Less Than";
+                  else if(token.equals(">"))
+                      token_value="Greater Than";
+                  else if(token.equals("("))
+                      token_value="Left Parenthese";
+                  else if(token.equals(")"))
+                      token_value="Right Parenthese";
+                  else if(token.equals(";"))
+                      token_value="Semi Colon";
+                  else if(token.equals(":="))
+                   token_value="assign";
+                  else if(token.equals("="))
+                   token_value="equal";
+                   Token_Type= token + " , Special_Symbol";
+                  // Token_Type=Token_Type +token_value;
+                   state=4;
+                   break;
+               case 4: 
+                 System.out.println(Token_Type);
+                 Token_Type="";
+                 token="";
+                   state=0;
+                   break;  
+               case 5:
+            String v=s;
+            while(!(v.equals("}"))&&(xx!=1)&&((k)<inline.length()))
+                   {    
+                       
+                         if(((k)<inline.length()))
+                         {
+                         m=inline.charAt((k));
+                         v=Character.toString(m);
+                       // System.out.println("v: "+v);
+
+                         s=v;
+                         k++;
+
+                         }
+
+                         if(v.equals("}"))
+                         {
+                             xx=1;
+                         Long_comments=false;
+                         }
+                   }
+            if(v.equals("}"))
+            {
+             xx=1;
+           Long_comments=false;
+            }
+         //   k++;
+            state = 0;
+            break;
+            
+        }
+                   
+                   
+           }
+          }
+        
+      }
+    }
+}
